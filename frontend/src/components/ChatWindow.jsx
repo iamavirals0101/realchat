@@ -11,6 +11,7 @@ export default function ChatWindow({
   onLoadOlder,
   hasMore,
   isTyping,
+  onCloseConversation,
   onEditMessage,
   onDeleteMessage,
   attachment,
@@ -38,8 +39,21 @@ export default function ChatWindow({
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-panel">
       <div className="border-b border-slate-100 bg-gradient-to-r from-white to-slate-50 px-5 py-4">
-        <h3 className="font-semibold text-ink">{conversation.user.name}</h3>
-        <p className="text-xs text-muted">{isTyping ? "Typing..." : "Active conversation"}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="font-semibold text-ink">{conversation.user.name}</h3>
+            <p className="text-xs text-muted">{isTyping ? "Typing..." : "Active conversation"}</p>
+          </div>
+          {currentUser?.role === "SUPPORT" && conversation.status !== "CLOSED" ? (
+            <button
+              type="button"
+              onClick={() => onCloseConversation?.(conversation.id)}
+              className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-100"
+            >
+              Close Chat
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto bg-gradient-to-b from-slate-50 to-white px-5 py-4 scrollbar-thin">

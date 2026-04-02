@@ -19,7 +19,8 @@ import {
   fetchUsers,
   markRead,
   removeMessage,
-  submitFeedback
+  submitFeedback,
+  updateConversationTicket
 } from "./services/api";
 import { connectSocket } from "./services/socket";
 
@@ -277,6 +278,11 @@ export default function App() {
               onLoadOlder={() => loadMessages(activeConversation.id, currentUserId, cursor)}
               hasMore={Boolean(cursor)}
               isTyping={Boolean(activeConversation && typingByConversation[activeConversation.id])}
+              onCloseConversation={async (conversationId) => {
+                await updateConversationTicket(conversationId, currentUserId, { status: "CLOSED" });
+                setActiveConversation((prev) => (prev ? { ...prev, status: "CLOSED" } : prev));
+                loadConversations(currentUserId);
+              }}
               onEditMessage={async (messageId, nextText) => {
                 const updated = await editMessage(messageId, currentUserId, nextText);
                 setMessages((prev) => prev.map((m) => (m.id === messageId ? { ...m, ...updated } : m)));

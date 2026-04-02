@@ -111,3 +111,10 @@ export async function fetchAnalytics() {
   const { data } = await api.get("/analytics/overview");
   return data;
 }
+
+export async function updateConversationTicket(conversationId, userId, payload) {
+  const { data } = await api.patch(`/conversations/${conversationId}/ticket`, payload, {
+    headers: { "x-user-id": userId }
+  });
+  return data;
+}
