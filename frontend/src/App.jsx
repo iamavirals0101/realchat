@@ -208,9 +208,9 @@ export default function App() {
   }
 
   return (
-    <div className="h-full bg-panel p-3 md:p-6">
+    <div className="h-full overflow-hidden bg-panel p-3 md:p-6">
       <div className="mx-auto grid h-full max-w-7xl grid-cols-1 gap-4 md:grid-cols-[320px_1fr]">
-        <aside className="rounded-2xl border border-slate-200 bg-white p-4 shadow-panel">
+        <aside className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-panel">
           <h1 className="mb-1 text-xl font-bold text-ink">
             {currentUser?.role === "SUPPORT" ? "Support Inbox" : "Customer Support Chat"}
           </h1>
@@ -223,7 +223,7 @@ export default function App() {
           <UserSwitcher users={users} currentUserId={currentUserId} onChange={setCurrentUserId} />
           <InboxFilters filters={filters} onChange={setFilters} isSupport={currentUser?.role === "SUPPORT"} />
 
-          <div className="mt-4">
+          <div className="mt-4 min-h-0 flex-1">
             <ConversationList
               conversations={conversations}
               activeConversationId={activeConversation?.id}
@@ -248,7 +248,7 @@ export default function App() {
           />
         </aside>
 
-        <main className="min-h-0">
+        <main className="flex min-h-0 h-full flex-col overflow-hidden">
           <AnalyticsPanel isSupport={currentUser?.role === "SUPPORT"} analytics={analytics} />
           <CustomerExperience
             isCustomer={currentUser?.role === "CUSTOMER"}
@@ -266,27 +266,29 @@ export default function App() {
               loadConversations(currentUserId);
             }}
           />
-          <ChatWindow
-            currentUser={currentUser}
-            conversation={activeConversation}
-            messages={messages}
-            input={input}
-            setInput={onType}
-            onSend={onSend}
-            onLoadOlder={() => loadMessages(activeConversation.id, currentUserId, cursor)}
-            hasMore={Boolean(cursor)}
-            isTyping={Boolean(activeConversation && typingByConversation[activeConversation.id])}
-            onEditMessage={async (messageId, nextText) => {
-              const updated = await editMessage(messageId, currentUserId, nextText);
-              setMessages((prev) => prev.map((m) => (m.id === messageId ? { ...m, ...updated } : m)));
-            }}
-            onDeleteMessage={async (messageId) => {
-              const updated = await removeMessage(messageId, currentUserId);
-              setMessages((prev) => prev.map((m) => (m.id === messageId ? { ...m, ...updated } : m)));
-            }}
-            attachment={attachment}
-            setAttachment={setAttachment}
-          />
+          <div className="min-h-0 flex-1">
+            <ChatWindow
+              currentUser={currentUser}
+              conversation={activeConversation}
+              messages={messages}
+              input={input}
+              setInput={onType}
+              onSend={onSend}
+              onLoadOlder={() => loadMessages(activeConversation.id, currentUserId, cursor)}
+              hasMore={Boolean(cursor)}
+              isTyping={Boolean(activeConversation && typingByConversation[activeConversation.id])}
+              onEditMessage={async (messageId, nextText) => {
+                const updated = await editMessage(messageId, currentUserId, nextText);
+                setMessages((prev) => prev.map((m) => (m.id === messageId ? { ...m, ...updated } : m)));
+              }}
+              onDeleteMessage={async (messageId) => {
+                const updated = await removeMessage(messageId, currentUserId);
+                setMessages((prev) => prev.map((m) => (m.id === messageId ? { ...m, ...updated } : m)));
+              }}
+              attachment={attachment}
+              setAttachment={setAttachment}
+            />
+          </div>
         </main>
       </div>
     </div>
