@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  SUPPORT
+}
+
+enum ConversationStatus {
+  OPEN
+  PENDING
+  RESOLVED
+  CLOSED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  SYSTEM
+}
+
+model User {
+  id             String                    @id @default(cuid())
+  name           String
+  email          String                    @unique
+  avatar         String?
+  role           Role                      @default(CUSTOMER)
+  createdAt      DateTime                  @default(now())
+  updatedAt      DateTime                  @updatedAt
+  sentMessages   Message[]                 @relation("sentMessages")
+  receivedMessages Message[]               @relation("receivedMessages")
+  assignedConversations Conversation[]      @relation("assignedSupport")
+  participants   ConversationParticipant[]
+  notes          InternalNote[]
+}
+
+model Conversation {
+  id           String                    @id @default(cuid())
+  subject      String?
+  status       ConversationStatus        @default(OPEN)
+  priority     Priority                  @default(MEDIUM)
+  tags         String                    @default("[]")
+  assignedSupportId String?
+  firstResponseAt DateTime?
+  resolvedAt   DateTime?
+  closedAt     DateTime?
+  slaDueAt     DateTime?
+  csatRating   Int?
+  csatComment  String?
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  assignedSupport User?                  @relation("assignedSupport", fields: [assignedSupportId], references: [id], onDelete: SetNull)
+  participants ConversationParticipant[]
+  messages     Message[]
+  notes        InternalNote[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([assignedSupportId])
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  userId         String
+  unreadCount    Int          @default(0)
+  createdAt      DateTime     @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  senderId       String
+  receiverId     String
+  type           MessageType  @default(TEXT)
+  content        String
+  attachmentUrl  String?
+  attachmentName String?
+  attachmentSize Int?
+  editedAt       DateTime?
+  deletedAt      DateTime?
+  deliveredAt    DateTime?
+  readAt         DateTime?
+  timestamp      DateTime     @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("sentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver     User         @relation("receivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, timestamp])
+  @@index([senderId])
+  @@index([receiverId])
+}
+
+model InternalNote {
+  id             String       @id @default(cuid())
+  conversationId String
+  authorId       String
+  content        String
+  createdAt      DateTime     @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  author       User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+}

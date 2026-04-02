@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: chatsystem-backend
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm ci && npm run prisma:generate
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: FRONTEND_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false
