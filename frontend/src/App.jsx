@@ -20,7 +20,8 @@ import {
   markRead,
   removeMessage,
   submitFeedback,
-  updateConversationTicket
+  updateConversationTicket,
+  uploadAttachment
 } from "./services/api";
 import { connectSocket } from "./services/socket";
 
@@ -282,6 +283,18 @@ export default function App() {
                 await updateConversationTicket(conversationId, currentUserId, { status: "CLOSED" });
                 setActiveConversation((prev) => (prev ? { ...prev, status: "CLOSED" } : prev));
                 loadConversations(currentUserId);
+              }}
+              onUploadAttachment={async (file) => {
+                try {
+                  const uploaded = await uploadAttachment(currentUserId, file);
+                  setAttachment({
+                    type: uploaded.type,
+                    url: uploaded.url,
+                    name: uploaded.name || file.name || ""
+                  });
+                } catch (_error) {
+                  // Keep UX simple for demo; uploader failure just leaves attachment unchanged.
+                }
               }}
               onEditMessage={async (messageId, nextText) => {
                 const updated = await editMessage(messageId, currentUserId, nextText);

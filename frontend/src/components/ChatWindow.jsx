@@ -12,6 +12,7 @@ export default function ChatWindow({
   hasMore,
   isTyping,
   onCloseConversation,
+  onUploadAttachment,
   onEditMessage,
   onDeleteMessage,
   attachment,
@@ -169,6 +170,17 @@ export default function ChatWindow({
             value={attachment.name}
             onChange={(e) => setAttachment((prev) => ({ ...prev, name: e.target.value }))}
             placeholder="Attachment name"
+            className="rounded-lg border border-slate-200 px-2 py-1 text-xs"
+          />
+          <input
+            type="file"
+            accept=".pdf,image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              onUploadAttachment?.(file);
+              e.target.value = "";
+            }}
             className="rounded-lg border border-slate-200 px-2 py-1 text-xs"
           />
         </div>

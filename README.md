@@ -40,6 +40,9 @@ Default URLs:
 3. Add environment variables:
    - `DATABASE_URL` = Neon connection string
    - `FRONTEND_URL` = your Vercel URL
+   - `CLOUDINARY_CLOUD_NAME` = Cloudinary cloud name
+   - `CLOUDINARY_API_KEY` = Cloudinary API key
+   - `CLOUDINARY_API_SECRET` = Cloudinary API secret
    - `PORT` = `5000` (optional)
 4. Import `render.yaml` if you prefer blueprint setup.
 
@@ -77,3 +80,4 @@ From `backend/`:
 ## Notes
 - Prisma provider is set to `postgresql` for Neon compatibility.
 - This repo is ready for automated deploy once pushed to GitHub and secrets are added.
+- Attachment uploads now support PDF/images via Cloudinary (`POST /api/uploads/attachment`).

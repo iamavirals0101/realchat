@@ -118,3 +118,16 @@ export async function updateConversationTicket(conversationId, userId, payload) 
   });
   return data;
 }
+
+export async function uploadAttachment(userId, file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const { data } = await api.post("/uploads/attachment", formData, {
+    headers: {
+      "x-user-id": userId
+    }
+  });
+
+  return data;
+}

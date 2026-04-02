@@ -31,6 +31,16 @@ app.get("/health", (_req, res) => {
 
 app.use("/api", chatRoutes);
 
+app.use((error, _req, res, _next) => {
+  if (error?.message?.includes("Only PDF and image files are allowed")) {
+    return res.status(400).json({ error: error.message });
+  }
+  if (error?.code === "LIMIT_FILE_SIZE") {
+    return res.status(400).json({ error: "Max upload size is 8MB." });
+  }
+  return res.status(500).json({ error: "Unexpected server error." });
+});
+
 const onlineUsers = new Map();
 
 function setUserOnline(userId, socketId) {

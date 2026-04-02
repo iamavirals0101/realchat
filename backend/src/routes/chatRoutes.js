@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { requireUser } from "../middleware/requireUser.js";
+import { upload } from "../lib/upload.js";
 import {
   addConversationNote,
   deleteMessage,
@@ -15,7 +16,8 @@ import {
   markConversationRead,
   postMessage,
   submitFeedback,
-  updateConversationTicket
+  updateConversationTicket,
+  uploadAttachment
 } from "../controllers/chatController.js";
 
 const router = Router();
@@ -40,5 +42,6 @@ router.get("/canned-replies", getCannedReplies);
 router.get("/analytics/overview", getAnalyticsOverview);
 router.patch("/messages/:messageId", requireUser, editMessage);
 router.delete("/messages/:messageId", requireUser, deleteMessage);
+router.post("/uploads/attachment", requireUser, upload.single("file"), uploadAttachment);
 
 export default router;

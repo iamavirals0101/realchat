@@ -1,5 +1,6 @@
 import { prisma } from "../lib/prisma.js";
 import { createMessage, updateTicket } from "./chatService.js";
+import { uploadBufferToCloudinary } from "../lib/upload.js";
 
 function parseTags(tagsRaw) {
   try {
@@ -402,4 +403,24 @@ export async function getAnalyticsOverview(_req, res) {
     volumeByDay: Array.from(dayVolume.entries()).map(([date, count]) => ({ date, count })),
     agentPerformance: Array.from(agentMap.values())
   });
+}
+
+export async function uploadAttachment(req, res) {
+  const file = req.file;
+  if (!file) {
+    return res.status(400).json({ error: "No file uploaded." });
+  }
+
+  try {
+    const uploaded = await uploadBufferToCloudinary(file);
+    const isPdf = file.mimetype === "application/pdf";
+    res.status(201).json({
+      url: uploaded.secure_url,
+      name: file.originalname,
+      size: file.size,
+      type: isPdf ? "FILE" : "IMAGE"
+    });
+  } catch (error) {
+    res.status(500).json({ error: "File upload failed." });
+  }
 }
