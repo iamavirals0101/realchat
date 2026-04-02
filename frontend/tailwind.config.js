@@ -6,9 +6,9 @@ export default {
       colors: {
         ink: "#1b2333",
         muted: "#5c667d",
-        panel: "#f7f9fc",
-        accent: "#3d7cff",
-        accentSoft: "#e9f0ff"
+        panel: "#f3f7f6",
+        accent: "#0f766e",
+        accentSoft: "#dff5f2"
       },
       fontFamily: {
         sans: ["Plus Jakarta Sans", "ui-sans-serif", "system-ui"]

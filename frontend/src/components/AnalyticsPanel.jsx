@@ -20,7 +20,10 @@
           <div className="mt-2 flex items-end gap-2">
             {volumeByDay.slice(-7).map((row) => (
               <div key={row.date} className="flex-1 text-center">
-                <div className="mx-auto w-full rounded-t bg-accent" style={{ height: `${(row.count / maxVolume) * 70}px` }} />
+                <div
+                  className="mx-auto w-full rounded-t bg-gradient-to-t from-accent to-emerald-400"
+                  style={{ height: `${(row.count / maxVolume) * 70}px` }}
+                />
                 <div className="mt-1 text-[10px] text-slate-500">{row.date.slice(5)}</div>
               </div>
             ))}

@@ -12,6 +12,7 @@ body,
 
 body {
   color: #1b2333;
+  background: radial-gradient(circle at top left, #e7f7f4 0%, #f5f7fb 40%, #eef3f8 100%);
 }
 
 .scrollbar-thin::-webkit-scrollbar {
@@ -19,6 +20,6 @@ body {
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: #c9d5f0;
+  background-color: #9fd7d0;
   border-radius: 999px;
 }

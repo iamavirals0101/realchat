@@ -16,7 +16,9 @@ export default function ConversationList({ conversations, activeConversationId, 
             key={item.id}
             onClick={() => onSelect(item)}
             className={`mb-2 w-full rounded-xl border px-3 py-3 text-left transition ${
-              isActive ? "border-accent bg-accentSoft" : "border-transparent bg-white hover:border-slate-200"
+              isActive
+                ? "border-accent bg-gradient-to-r from-accentSoft to-white"
+                : "border-transparent bg-white hover:border-slate-200 hover:shadow-sm"
             }`}
           >
             <div className="flex items-center justify-between gap-2">
