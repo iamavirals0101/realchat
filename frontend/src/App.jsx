@@ -104,6 +104,7 @@ export default function App() {
     if (!currentUserId) return;
     loadConversations(currentUserId);
 
+    // Recreate socket bindings whenever user or filter scope changes so inbox events stay context-aware.
     const socket = connectSocket(currentUserId);
     socketRef.current = socket;
 
