@@ -140,6 +140,7 @@ export async function getMessages(req, res) {
     }
   });
 
+  // Reset unread count only when loading the latest window (not while backfilling older pages).
   await prisma.conversationParticipant.update({
     where: {
       conversationId_userId: {
