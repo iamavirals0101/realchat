@@ -41,6 +41,7 @@ app.use((error, _req, res, _next) => {
   return res.status(500).json({ error: "Unexpected server error." });
 });
 
+// Tracks every active socket per user so multi-tab sessions stay in sync.
 const onlineUsers = new Map();
 
 function setUserOnline(userId, socketId) {
